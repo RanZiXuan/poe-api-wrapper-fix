@@ -694,14 +694,16 @@ class PoeApi:
             for i in range(len(file_form)):
                 attachments.append(f'file{i}')
         
-        # 临时注释掉botInfo获取，使用默认msgPrice
-        # botInfo = self.get_botInfo(bot)
-        # msgPrice = botInfo.get('displayMessagePointPrice')
-        msgPrice = 20  # 使用默认值
-        # if not botInfo:
-        #     raise ValueError(
-        #         f"Failed to get bot info for {bot}. Make sure the bot exists before creating new chat."
-        #     )
+        try:
+            botInfo = self.get_botInfo(bot)
+            msgPrice = botInfo.get('displayMessagePointPrice')
+            if not botInfo:
+                raise ValueError(
+                    f"Failed to get bot info for {bot}. Make sure the bot exists before creating new chat."
+                )
+        except Exception as e:
+            print(f"Warning: Failed to get bot info, using default msgPrice. Error: {e}")
+            msgPrice = 20  # 使用默认值
             
         if (chatId == None and chatCode == None):
             try:
